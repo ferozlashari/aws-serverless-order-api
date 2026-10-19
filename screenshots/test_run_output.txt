@@ -1,0 +1,32 @@
+== pricing ==
+  PASS: subtotal sums quantity * unit_price across items
+  PASS: tax applies the correct regional rate
+  PASS: total is subtotal + tax
+  PASS: Oregon has zero sales tax
+  PASS: unknown region falls back to default tax rate rather than erroring
+== create_order handler ==
+  PASS: returns 201 on success
+  PASS: computes correct total with regional tax
+  PASS: new order starts in PENDING status
+  PASS: response includes a generated orderId
+  PASS: missing customerId returns 400
+  PASS: empty items list returns 400
+  PASS: negative quantity returns 400
+  PASS: malformed JSON body returns 400, not a 500 crash
+== get_order handler ==
+  PASS: fetches an existing order with 200
+  PASS: fetching a nonexistent order returns 404, not a crash
+== list_orders handler ==
+  PASS: lists only orders for the requested customer
+  PASS: customer with no orders returns an empty list, not an error
+== update_order_status handler (state machine) ==
+  PASS: valid transition PENDING -> CONFIRMED succeeds
+  PASS: invalid transition CONFIRMED -> PENDING returns 409, not silently allowed
+  PASS: unrecognized status value returns 400
+  PASS: updating a nonexistent order returns 404
+  PASS: lifecycle step to CONFIRMED succeeds
+  PASS: lifecycle step to SHIPPED succeeds
+  PASS: lifecycle step to DELIVERED succeeds
+  PASS: DELIVERED is a terminal state - cannot cancel after delivery
+
+25 passed, 0 failed
